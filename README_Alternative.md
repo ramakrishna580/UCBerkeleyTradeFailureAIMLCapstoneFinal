@@ -2,6 +2,9 @@
 
 **UC Berkeley Professional Certificate in Machine Learning & Artificial Intelligence — Capstone Project**
 
+**Author:** Rama Nuti  
+**GitHub:** [ramakrishna580](https://github.com/ramakrishna580/)
+
 ## Executive summary
 
 This capstone investigates whether pre-settlement trade and operational signals can identify securities transactions at elevated risk of settlement failure, enabling operations teams to prioritize preventive action. It combines supervised failure classification, settlement-delay regression, exploratory and statistical analysis, unsupervised segmentation, anomaly detection, explainability, and an operations-oriented risk queue. The analysis uses **synthetic trade settlement data**, so results are educational demonstrations rather than validated production performance.
@@ -198,4 +201,6 @@ Validate on anonymized real trade data with permission; compare models on out-of
 
 ## Contact and further information
 
-Author/contact details were not supplied in the uploaded README templates. Add the preferred author name, GitHub repository URL, and contact details before publication.
+**Author:** Rama Nuti  
+**GitHub profile:** https://github.com/ramakrishna580/  
+**Contact:** Please reach out through the GitHub profile. No public email address was provided.
