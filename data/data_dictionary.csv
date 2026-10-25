@@ -1,0 +1,38 @@
+field,type,description,availability,main_classifier_usage
+trade_id,Identifier,Synthetic unique transaction identifier,Pre-prediction,No - identifier only
+trade_date,Date,Trade execution date,Pre-prediction,Context/date split
+settlement_date,Date,Expected contractual settlement date,Pre-prediction,Context/date split
+asset_class,Categorical,"Equity, corporate bond, government bond, or ETF",Pre-prediction,Yes
+buy_sell,Categorical,Transaction direction,Pre-prediction,Yes
+currency,Categorical,Trade currency,Pre-prediction,Yes
+market,Categorical,Primary market geography,Pre-prediction,Yes
+settlement_location,Categorical,Synthetic settlement/depository location,Pre-prediction,Yes
+counterparty_id,Categorical,Synthetic counterparty identifier,Pre-prediction,Yes
+custodian,Categorical,Synthetic custodian identifier,Pre-prediction,Yes
+trade_amount,Numeric,Synthetic notional/trade value,Pre-prediction,Yes
+quantity,Numeric,Synthetic security quantity,Pre-prediction,Yes
+settlement_days,Numeric,Expected days between trade and settlement,Pre-prediction,Yes
+cross_border,Binary,1 if transaction is cross-border,Pre-prediction,Yes
+month_end,Binary,1 if trade date is month-end,Pre-prediction,Yes
+quarter_end,Binary,1 if trade date is quarter-end,Pre-prediction,Yes
+market_holiday_mismatch,Binary,Synthetic cross-market calendar mismatch flag,Pre-prediction,Yes
+ssi_status,Categorical,Settlement instruction status: VALID/CHANGED/MISSING,Pre-prediction,Yes
+confirmation_delay_minutes,Numeric,Minutes between trade and confirmation,Pre-prediction,Yes
+allocation_delay_minutes,Numeric,Synthetic allocation delay,Pre-prediction,Yes
+affirmation_delay_minutes,Numeric,Synthetic affirmation delay,Pre-prediction,Yes
+matching_attempts,Numeric,Number of matching attempts,Pre-prediction,Yes
+trade_amendments,Numeric,Count of amendments before cutoff,Pre-prediction,Yes
+hours_until_cutoff,Numeric,Hours remaining until operational settlement cutoff,Pre-prediction,Yes
+prior_fail_rate_30d,Numeric,Synthetic counterparty historical fail rate over prior 30d,Pre-prediction,Yes
+prior_fail_rate_90d,Numeric,Synthetic counterparty historical fail rate over prior 90d,Pre-prediction,Yes
+prior_trade_count_30d,Numeric,Synthetic recent counterparty activity,Pre-prediction,Yes
+security_liquidity_score,Numeric,Synthetic liquidity score 0-1,Pre-prediction,Yes
+market_volatility_index,Numeric,Synthetic market-volatility level,Pre-prediction,Yes
+inventory_shortfall_indicator,Binary,Synthetic indicator of possible security inventory constraint,Pre-prediction,Yes
+counterparty_avg_trade_amount,Numeric,Synthetic rolling/reference average trade size,Pre-prediction,Yes
+trade_size_ratio,Numeric,Current trade amount divided by synthetic counterparty average,Pre-prediction,Yes
+pre_settlement_note,Text,Synthetic note available before settlement,Pre-prediction,NLP-only by default
+settlement_failed,Binary target,"1 failed, 0 settled",Post-outcome,TARGET - never predictor
+settlement_delay_hours,Numeric outcome,Synthetic final settlement delay in hours,Post-outcome,Regression target only
+failure_reason,Categorical outcome,Normalized final failure reason,Post-outcome,No - leakage; diagnostic NLP only
+failure_reason_description,Text outcome,Human-readable final failure description,Post-outcome,No - leakage; diagnostic NLP only

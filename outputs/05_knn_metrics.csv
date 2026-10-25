@@ -1,0 +1,2 @@
+model,precision,recall,f1,roc_auc,pr_auc
+KNN,0.0,0.0,0.0,0.58347521244612,0.025830734877531694
