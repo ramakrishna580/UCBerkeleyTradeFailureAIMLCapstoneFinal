@@ -1,0 +1,176 @@
+
+@startuml
+title <b>AI-Powered Intelligent Trade Settlement Failure Prediction</b>\n<b>System Architecture - Color-Coded Process Flow</b>
+
+top to bottom direction
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 14
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam defaultFontName Arial
+skinparam defaultFontStyle bold
+skinparam defaultFontSize 13
+skinparam ArrowColor #455A73
+skinparam ArrowThickness 1.5
+skinparam linetype ortho
+
+skinparam package {
+  BackgroundColor #F7F9FC
+  BorderColor #5E738C
+  FontColor #17324D
+  FontStyle bold
+  FontSize 15
+}
+
+skinparam component {
+  BorderColor #52657A
+  FontColor #14283E
+  FontStyle bold
+}
+
+skinparam database {
+  BorderColor #52657A
+  FontColor #14283E
+  FontStyle bold
+}
+
+package "1. DATA SOURCE & INGESTION" #EAF3FF {
+  component "<b>1.1 Synthetic Trade Generator</b>\n00_generate_dataset.py" as GEN #C5E1FF
+  database "<b>1.2 Trade Settlement Dataset</b>\ntrade_settlement_synthetic.csv" as DATA #B5D7F8
+  database "<b>1.3 Data Dictionary</b>\ndata_dictionary.csv" as DICT #D4E7FF
+  component "<b>1.4 Common Utilities</b>\ncommon.py" as COMMON #A9C9EF
+
+  GEN --> DATA
+  DICT ..> DATA : Schema
+}
+
+package "2. EDA & FEATURE PREPARATION" #E9F8EF {
+  component "<b>2.1 EDA & Data Quality</b>\n01_eda.py" as EDA #A8E6CF
+  component "<b>2.2 Feature Engineering</b>\n02_feature_engineering.py" as FE #C2F0A8
+  component "<b>2.3 Preprocessing</b>\nEncoding / Scaling / Temporal Split" as PREP #D7F2B2
+
+  DATA --> EDA
+  EDA --> FE
+  FE --> PREP
+}
+
+package "3. MACHINE LEARNING ENGINE" #F1EDFF {
+
+  package "3A. SUPERVISED LEARNING" #EAE3FF {
+    component "<b>3.1 Settlement Delay Regression</b>\n03_regression_settlement_delay.py" as REG #D5C4FF
+    component "<b>3.2 Logistic Regression</b>\n04_logistic_regression.py" as LR #E7C6FF
+    component "<b>3.3 K-Nearest Neighbors</b>\n05_knn.py" as KNN #C9B6FF
+    component "<b>3.4 Decision Tree</b>\n06_decision_tree.py" as DT #F1C0FF
+    component "<b>3.5 Random Forest</b>\n07_random_forest.py" as RF #B7C5FF
+    component "<b>3.6 Support Vector Machine</b>\n08_svm.py" as SVM #C7B0E8
+    component "<b>3.7 XGBoost</b>\n12_xgboost.py" as XGB #A8B8FF
+    component "<b>3.8 CatBoost</b>\n13_catboost.py" as CAT #D8B4E2
+  }
+
+  package "3B. UNSUPERVISED LEARNING" #E4F4FF {
+    component "<b>3.9 PCA / SVD</b>\n09_pca_svd.py" as PCA #A9DEF9
+    component "<b>3.10 K-Means Clustering</b>\n10_kmeans_clustering.py" as KM #8ED1D8
+    component "<b>3.11 Isolation Forest</b>\n11_isolation_forest.py" as IF #B4E4E8
+  }
+
+  PREP --> REG
+  PREP --> LR
+  PREP --> KNN
+  PREP --> DT
+  PREP --> RF
+  PREP --> SVM
+  PREP --> XGB
+  PREP --> CAT
+  PREP --> PCA
+  PCA --> KM
+  PREP --> IF
+}
+
+package "4. MODEL EVALUATION & EXPLAINABILITY" #FFF4E5 {
+  component "<b>4.1 Model Comparison & Scorecard</b>\n14_model_comparison.py" as COMP #FFD59A
+  component "<b>4.2 Threshold & Cost Optimization</b>\n15_threshold_cost_optimization.py" as COST #FFC078
+  component "<b>4.3 SHAP Explainability</b>\n16_shap_explainability.py" as SHAP #FFE19C
+  component "<b>4.4 Failure Reason NLP Analysis</b>\n17_nlp_failure_reason.py" as NLP #FFD3B6
+  component "<b>4.5 Explanation Templates</b>\n18_genai_explanation_template.py" as GENAI #FFBFA8
+
+  LR --> COMP
+  KNN --> COMP
+  DT --> COMP
+  RF --> COMP
+  SVM --> COMP
+  XGB --> COMP
+  CAT --> COMP
+  REG ..> COMP : Regression metrics
+
+  COMP --> COST
+  COMP --> SHAP
+  DATA ..> NLP : Failure reason text
+  SHAP --> GENAI
+  NLP --> GENAI
+}
+
+package "5. OPERATIONAL RISK MANAGEMENT" #FFECEF {
+  component "<b>5.1 End-to-End Risk Pipeline</b>\n19_end_to_end_pipeline.py" as PIPE #FFB3C1
+  component "<b>5.2 Trade Failure Risk Scoring</b>" as SCORE #FF9EAD
+  component "<b>5.3 Prioritized Operations Risk Queue</b>" as QUEUE #F5A3C7
+  component "<b>5.4 Analyst Review & Investigation</b>\nProposed Workflow" as ANALYST #FFD0D8
+
+  COST --> PIPE
+  SHAP --> PIPE
+  PIPE --> SCORE
+  SCORE --> QUEUE
+  QUEUE ..> ANALYST
+  GENAI ..> ANALYST : Risk explanation
+}
+
+package "6. MONITORING & REPORTING" #E8F8F5 {
+  component "<b>6.1 Data Drift Monitoring / PSI</b>\n20_model_monitoring.py" as MON #9EE2D0
+  database "<b>6.2 CSV Reports & PNG Charts</b>\noutputs/" as OUTPUT #B6E8C8
+  component "<b>6.3 Jupyter Notebooks</b>\nDraft / PreFinal / FINAL" as NB #A7DDE9
+
+  DATA --> MON
+  COMP --> OUTPUT
+  COST --> OUTPUT
+  SHAP --> OUTPUT
+  KM --> OUTPUT
+  IF --> OUTPUT
+  NLP --> OUTPUT
+  QUEUE --> OUTPUT
+  MON --> OUTPUT
+  NB ..> OUTPUT : Reproducible outputs
+}
+
+COMMON ..> EDA : Shared functions
+COMMON ..> FE : Shared functions
+COMMON ..> PIPE : Shared functions
+
+note right of GENAI #FFF5D6
+  <b>Template-based explanations</b>
+  No deployed external LLM API
+end note
+
+note right of ANALYST #FFF5D6
+  <b>Proposed analyst workflow</b>
+  Not a deployed interface
+end note
+
+note right of DATA #FFF5D6
+  <b>Synthetic dataset</b>
+  No live trading integration
+end note
+
+legend bottom
+  <b>Architecture Color Legend</b>
+  |= Color |= Layer |
+  |<#C5E1FF> Blue | Data Ingestion |
+  |<#A8E6CF> Green | EDA & Preparation |
+  |<#D5C4FF> Purple | Supervised ML |
+  |<#A9DEF9> Cyan | Unsupervised ML |
+  |<#FFD59A> Orange | Evaluation & Explainability |
+  |<#FFB3C1> Pink | Operational Risk Management |
+  |<#9EE2D0> Teal | Monitoring & Reporting |
+endlegend
+
+@enduml

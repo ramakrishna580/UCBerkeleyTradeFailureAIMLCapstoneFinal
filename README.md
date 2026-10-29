@@ -9,6 +9,16 @@
 
 This capstone investigates whether pre-settlement trade and operational signals can identify securities transactions at elevated risk of settlement failure, enabling operations teams to prioritize preventive action. It combines supervised failure classification, settlement-delay regression, exploratory and statistical analysis, unsupervised segmentation, anomaly detection, explainability, and an operations-oriented risk queue. The analysis uses **synthetic trade settlement data**, so results are educational demonstrations rather than validated production performance.
 
+## System Architecture
+
+The numbered, color-coded architecture below illustrates the project's data ingestion, EDA and feature preparation, supervised and unsupervised machine learning, evaluation and explainability, operations risk prioritization, and monitoring/reporting. Each box has a distinct background color and a bold title. Solid arrows show principal dependencies; dashed arrows show supporting or proposed connections.
+
+![Numbered, color-coded trade settlement failure prediction system architecture](docs/Trade_Failure_System_Architecture.svg)
+
+[View full-size PNG](docs/Trade_Failure_System_Architecture.png) · [View editable Graphviz source](docs/Trade_Failure_System_Architecture.dot)
+
+**Scope:** This is a research architecture using synthetic data, not a deployed trading system. Analyst review is a proposed workflow; narrative explanations are template-based rather than an external LLM service. The numbers identify components and branches, not a strict execution sequence.
+
 ## Business rationale and research questions
 
 Trade settlement failures can generate operational workload, liquidity and funding pressure, client disruption, and potential penalties. Rather than relying exclusively on post-event exception handling, this project asks:

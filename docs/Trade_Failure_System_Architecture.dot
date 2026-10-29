@@ -1,0 +1,138 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", fontname="Arial", pad="0.3", nodesep="0.32", ranksep="0.55", splines=polyline, compound=true, newrank=true];
+node [shape=box, style="rounded,filled", color="#53657B", penwidth=1.2, fontname="Arial", fontsize=11, margin="0.15,0.12"];
+edge [color="#51677E", penwidth=1.1, arrowsize=0.65];
+subgraph cluster_0 {
+label=<<B>1. DATA SOURCE &amp; INGESTION</B>>;
+labelloc=t;
+style="rounded,filled";
+fillcolor="#EAF3FF";
+color="#70839B";
+penwidth=1.3;
+GEN [label=<<B>1.1 Synthetic Trade Generator</B><BR/><FONT POINT-SIZE="9">00_generate_dataset.py</FONT>>, fillcolor="#C5E1FF"];
+DATA [label=<<B>1.2 Trade Settlement Dataset</B><BR/><FONT POINT-SIZE="9">trade_settlement_synthetic.csv</FONT>>, fillcolor="#B5D7F8"];
+DICT [label=<<B>1.3 Data Dictionary</B><BR/><FONT POINT-SIZE="9">data_dictionary.csv</FONT>>, fillcolor="#D4E7FF"];
+COMMON [label=<<B>1.4 Common Utilities</B><BR/><FONT POINT-SIZE="9">common.py</FONT>>, fillcolor="#A9C9EF"];
+}
+subgraph cluster_1 {
+label=<<B>2. EDA &amp; FEATURE PREPARATION</B>>;
+labelloc=t;
+style="rounded,filled";
+fillcolor="#E9F8EF";
+color="#70839B";
+penwidth=1.3;
+EDA [label=<<B>2.1 EDA &amp; Data Quality</B><BR/><FONT POINT-SIZE="9">01_eda.py</FONT>>, fillcolor="#A8E6CF"];
+FE [label=<<B>2.2 Feature Engineering</B><BR/><FONT POINT-SIZE="9">02_feature_engineering.py</FONT>>, fillcolor="#C2F0A8"];
+PREP [label=<<B>2.3 Preprocessing</B><BR/><FONT POINT-SIZE="9">Encoding / Scaling / Temporal Split</FONT>>, fillcolor="#D7F2B2"];
+}
+subgraph cluster_2 {
+label=<<B>3A. SUPERVISED MACHINE LEARNING</B>>;
+labelloc=t;
+style="rounded,filled";
+fillcolor="#EAE3FF";
+color="#70839B";
+penwidth=1.3;
+REG [label=<<B>3.1 Settlement Delay Regression</B><BR/><FONT POINT-SIZE="9">03_regression_settlement_delay.py</FONT>>, fillcolor="#D5C4FF"];
+LR [label=<<B>3.2 Logistic Regression</B><BR/><FONT POINT-SIZE="9">04_logistic_regression.py</FONT>>, fillcolor="#E7C6FF"];
+KNN [label=<<B>3.3 K-Nearest Neighbors</B><BR/><FONT POINT-SIZE="9">05_knn.py</FONT>>, fillcolor="#C9B6FF"];
+DT [label=<<B>3.4 Decision Tree</B><BR/><FONT POINT-SIZE="9">06_decision_tree.py</FONT>>, fillcolor="#F1C0FF"];
+RF [label=<<B>3.5 Random Forest</B><BR/><FONT POINT-SIZE="9">07_random_forest.py</FONT>>, fillcolor="#B7C5FF"];
+SVM [label=<<B>3.6 Support Vector Machine</B><BR/><FONT POINT-SIZE="9">08_svm.py</FONT>>, fillcolor="#C7B0E8"];
+XGB [label=<<B>3.7 XGBoost</B><BR/><FONT POINT-SIZE="9">12_xgboost.py</FONT>>, fillcolor="#A8B8FF"];
+CAT [label=<<B>3.8 CatBoost</B><BR/><FONT POINT-SIZE="9">13_catboost.py</FONT>>, fillcolor="#D8B4E2"];
+}
+subgraph cluster_3 {
+label=<<B>3B. UNSUPERVISED MACHINE LEARNING</B>>;
+labelloc=t;
+style="rounded,filled";
+fillcolor="#E4F4FF";
+color="#70839B";
+penwidth=1.3;
+PCA [label=<<B>3.9 PCA / SVD</B><BR/><FONT POINT-SIZE="9">09_pca_svd.py</FONT>>, fillcolor="#A9DEF9"];
+KM [label=<<B>3.10 K-Means Clustering</B><BR/><FONT POINT-SIZE="9">10_kmeans_clustering.py</FONT>>, fillcolor="#8ED1D8"];
+IF [label=<<B>3.11 Isolation Forest</B><BR/><FONT POINT-SIZE="9">11_isolation_forest.py</FONT>>, fillcolor="#B4E4E8"];
+}
+subgraph cluster_4 {
+label=<<B>4. MODEL EVALUATION &amp; EXPLAINABILITY</B>>;
+labelloc=t;
+style="rounded,filled";
+fillcolor="#FFF4E5";
+color="#70839B";
+penwidth=1.3;
+COMP [label=<<B>4.1 Model Comparison &amp; Scorecard</B><BR/><FONT POINT-SIZE="9">14_model_comparison.py</FONT>>, fillcolor="#FFD59A"];
+COST [label=<<B>4.2 Threshold &amp; Cost Optimization</B><BR/><FONT POINT-SIZE="9">15_threshold_cost_optimization.py</FONT>>, fillcolor="#FFC078"];
+SHAP [label=<<B>4.3 SHAP Explainability</B><BR/><FONT POINT-SIZE="9">16_shap_explainability.py</FONT>>, fillcolor="#FFE19C"];
+NLP [label=<<B>4.4 Failure Reason NLP Analysis</B><BR/><FONT POINT-SIZE="9">17_nlp_failure_reason.py</FONT>>, fillcolor="#FFD3B6"];
+GENAI [label=<<B>4.5 Explanation Templates</B><BR/><FONT POINT-SIZE="9">18_genai_explanation_template.py</FONT>>, fillcolor="#FFBFA8"];
+}
+subgraph cluster_5 {
+label=<<B>5. OPERATIONAL RISK MANAGEMENT</B>>;
+labelloc=t;
+style="rounded,filled";
+fillcolor="#FFECEF";
+color="#70839B";
+penwidth=1.3;
+PIPE [label=<<B>5.1 End-to-End Risk Pipeline</B><BR/><FONT POINT-SIZE="9">19_end_to_end_pipeline.py</FONT>>, fillcolor="#FFB3C1"];
+SCORE [label=<<B>5.2 Trade Failure Risk Scoring</B><BR/><FONT POINT-SIZE="9">Logical step in pipeline</FONT>>, fillcolor="#FF9EAD"];
+QUEUE [label=<<B>5.3 Prioritized Operations Risk Queue</B><BR/><FONT POINT-SIZE="9">CSV output</FONT>>, fillcolor="#F5A3C7"];
+ANALYST [label=<<B>5.4 Analyst Review &amp; Investigation</B><BR/><FONT POINT-SIZE="9">Proposed workflow (not deployed)</FONT>>, fillcolor="#FFD0D8"];
+}
+subgraph cluster_6 {
+label=<<B>6. MONITORING &amp; REPORTING</B>>;
+labelloc=t;
+style="rounded,filled";
+fillcolor="#E8F8F5";
+color="#70839B";
+penwidth=1.3;
+MON [label=<<B>6.1 Data Drift Monitoring / PSI</B><BR/><FONT POINT-SIZE="9">20_model_monitoring.py</FONT>>, fillcolor="#9EE2D0"];
+OUTPUT [label=<<B>6.2 CSV Reports &amp; PNG Charts</B><BR/><FONT POINT-SIZE="9">outputs/</FONT>>, fillcolor="#B6E8C8"];
+NB [label=<<B>6.3 Jupyter Notebooks</B><BR/><FONT POINT-SIZE="9">Draft / PreFinal / FINAL</FONT>>, fillcolor="#A7DDE9"];
+}
+GEN -> DATA;
+DICT -> DATA [style=dashed, color="#8C98A8", constraint=false];
+DATA -> EDA;
+EDA -> FE;
+FE -> PREP;
+PREP -> REG;
+PREP -> LR;
+PREP -> KNN;
+PREP -> DT;
+PREP -> RF;
+PREP -> SVM;
+PREP -> XGB;
+PREP -> CAT;
+PREP -> PCA;
+PREP -> IF;
+PCA -> KM;
+LR -> COMP;
+KNN -> COMP;
+DT -> COMP;
+RF -> COMP;
+SVM -> COMP;
+XGB -> COMP;
+CAT -> COMP;
+COMP -> COST;
+COMP -> SHAP;
+DATA -> NLP [style=dashed, color="#8C98A8", constraint=false];
+SHAP -> GENAI;
+NLP -> GENAI;
+COST -> PIPE;
+SHAP -> PIPE;
+PIPE -> SCORE;
+SCORE -> QUEUE;
+QUEUE -> ANALYST [style=dashed, color="#8C98A8", constraint=false];
+GENAI -> ANALYST [style=dashed, color="#8C98A8", constraint=false];
+DATA -> MON;
+COMP -> OUTPUT;
+COST -> OUTPUT;
+SHAP -> OUTPUT;
+KM -> OUTPUT;
+IF -> OUTPUT;
+NLP -> OUTPUT;
+QUEUE -> OUTPUT;
+MON -> OUTPUT;
+NB -> OUTPUT [style=dashed, color="#8C98A8", constraint=false];
+COMMON -> EDA [style=dashed, color="#8C98A8", constraint=false];
+COMMON -> FE [style=dashed, color="#8C98A8", constraint=false];
+COMMON -> PIPE [style=dashed, color="#8C98A8", constraint=false];
+}
