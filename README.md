@@ -13,6 +13,8 @@ This capstone investigates whether pre-settlement trade and operational signals 
 
 The numbered, color-coded architecture below illustrates the project's data ingestion, EDA and feature preparation, supervised and unsupervised machine learning, evaluation and explainability, operations risk prioritization, and monitoring/reporting. Each box has a distinct background color and a bold title. Solid arrows show principal dependencies; dashed arrows show supporting or proposed connections.
 
+![Machine Learning Pipeline](docs/MachineLearning-PipeLine.jpg)
+
 ![Machine Learning Pipeline](docs/Machine_Learning_Pipeline.svg)
 
 ![Numbered, color-coded trade settlement failure prediction system architecture](docs/Trade_Failure_System_Architecture_1.svg)
