@@ -17,9 +17,9 @@ The numbered, color-coded architecture below illustrates the project's data inge
 
 ![Machine Learning Pipeline](docs/Machine_Learning_Pipeline.svg)
 
-![Numbered, color-coded trade settlement failure prediction system architecture](docs/Trade_Failure_System_Architecture_1.svg)
+![Numbered, color-coded trade settlement failure prediction system architecture](docs/Trade_Failure_System_Architecture_1.png)
 
-[View full-size PNG](docs/Trade_Failure_System_Architecture_1.png) · [View editable Graphviz source](docs/Trade_Failure_System_Architecture.dot)
+[View full-size PNG](docs/Trade_Failure_System_Architecture_1.png) · [View editable Graphviz source](docs/Trade_Failure_System_Architecture.dot) · [View svg](docs/Trade_Failure_System_Architecture_1.svg)
 
 **Scope:** This is a research architecture using synthetic data, not a deployed trading system. Analyst review is a proposed workflow; narrative explanations are template-based rather than an external LLM service. The numbers identify components and branches, not a strict execution sequence.
 
