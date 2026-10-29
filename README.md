@@ -13,6 +13,8 @@ This capstone investigates whether pre-settlement trade and operational signals 
 
 The numbered, color-coded architecture below illustrates the project's data ingestion, EDA and feature preparation, supervised and unsupervised machine learning, evaluation and explainability, operations risk prioritization, and monitoring/reporting. Each box has a distinct background color and a bold title. Solid arrows show principal dependencies; dashed arrows show supporting or proposed connections.
 
+![Machine Learning Pipeline](docs/Machine_Learning_Pipeline.svg)
+
 ![Numbered, color-coded trade settlement failure prediction system architecture](docs/Trade_Failure_System_Architecture_1.svg)
 
 [View full-size PNG](docs/Trade_Failure_System_Architecture_1.png) · [View editable Graphviz source](docs/Trade_Failure_System_Architecture.dot)
@@ -221,10 +223,10 @@ The **draft** provides a reproducible starting point and synthetic data generato
 
 ### Submission verification checklist
 
-- [ ] Input CSV is available and the data path resolves.
-- [ ] Notebook kernel is restarted and all intended sections run successfully.
-- [ ] Data leakage exclusions are confirmed.
-- [ ] Model comparison metrics reflect the latest run.
-- [ ] Results and charts are retained and interpreted accurately.
-- [ ] Synthetic-data and hypothetical-cost limitations are explicit.
-- [x] Author name and GitHub profile are included; add a public email address only if desired.
+- [✅] Input CSV is available and the data path resolves.
+- [✅] Notebook kernel is restarted and all intended sections run successfully.
+- [✅] Data leakage exclusions are confirmed.
+- [✅] Model comparison metrics reflect the latest run.
+- [✅] Results and charts are retained and interpreted accurately.
+- [✅] Synthetic-data and hypothetical-cost limitations are explicit.
+- [✅] Author name and GitHub profile are included; add a public email address only if desired.
