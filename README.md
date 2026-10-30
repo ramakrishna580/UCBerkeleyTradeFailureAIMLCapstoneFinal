@@ -23,15 +23,216 @@ The numbered, color-coded architecture below illustrates the project's data inge
 
 **Scope:** This is a research architecture using synthetic data, not a deployed trading system. Analyst review is a proposed workflow; narrative explanations are template-based rather than an external LLM service. The numbers identify components and branches, not a strict execution sequence.
 
-## Business rationale and research questions
+# AI-Powered Intelligent Trade Settlement Failure Prediction and Explainable Risk Management System
 
-Trade settlement failures can generate operational workload, liquidity and funding pressure, client disruption, and potential penalties. Rather than relying exclusively on post-event exception handling, this project asks:
+**UC Berkeley Professional Certificate in Machine Learning & Artificial Intelligence — Final Capstone Project**  
+**Author:** Rama Nuti
 
-1. Can information available before settlement predict `settlement_failed`?
-2. Which trade, counterparty, standing settlement instruction (SSI), timing, and operational features are associated with higher risk?
-3. How do baseline and advanced models compare under a low failure rate?
-4. Can models estimate `settlement_delay_hours` as a separate regression problem?
-5. Can predictions be converted into explainable, actionable, prioritized trade-review queues?
+## 1. What Is the Trade Settlement Failure Prediction and Explainable Risk Management System?
+
+Trade settlement is the completion of a securities transaction through the transfer of securities and the corresponding payment. A settlement failure occurs when a transaction does not complete by its contractual settlement deadline. Potential contributing factors include missing or incorrect settlement instructions, delayed confirmation or affirmation, inventory constraints, and operational processing issues.
+
+This capstone explores a machine learning decision-support system that identifies trades at elevated risk **before settlement**. It combines historical trade characteristics, operational signals, and counterparty history to produce a failure-risk score and prioritize trades for investigation.
+
+The explainable risk management component helps an analyst understand which features influenced a prediction. Global explanations describe the model's overall behavior; local explanations describe an individual trade's score. These explanations identify model associations rather than establish the actual cause of a failure.
+
+The intended workflow is:
+
+1. Capture trade and operational information available at a defined prediction time.
+2. Validate and transform the information using the fitted preprocessing pipeline.
+3. Estimate settlement-failure risk and, in a separate regression task, settlement delay.
+4. Rank trades for review and display the main model-based risk drivers.
+5. Support analyst investigation, record outcomes, and monitor model performance.
+
+**Project scope:** This is an educational research prototype using synthetic data. It does not demonstrate a deployed trading system, validated production performance, or realized financial savings. The risk narrative demonstration uses grounded rules/templates; it does not call an external large language model.
+
+## 2. Business Understanding
+
+### Business problem
+
+Reactive exception management identifies problems after they have already disrupted settlement. Operations teams need a way to focus limited investigation capacity on trades most likely to require preventive intervention.
+
+Settlement failures can create additional reconciliation work, liquidity pressure, client disruption, and potential financial costs. Predictive prioritization could help teams investigate instruction issues, inventory constraints, or processing delays earlier.
+
+### Business objectives
+
+- Identify potentially failing trades before the contractual settlement deadline.
+- Prioritize investigations using failure probability, trade context, and available review capacity.
+- Provide understandable explanations for alerts.
+- Explore patterns across asset classes, markets, counterparties, and operational processes.
+- Evaluate the trade-off between missed failures and unnecessary investigations.
+
+### Analytical questions
+
+- Can pre-settlement information distinguish failures from successful settlements?
+- Which features are associated with elevated predicted risk?
+- Which models provide the most useful balance of detection and investigation workload?
+- Can a separate regression model estimate settlement delay?
+- Can clustering and anomaly detection reveal operational segments worth investigating?
+
+### Success criteria
+
+Model evaluation emphasizes failure recall, precision, F1, precision–recall performance, and alert volume. Business evaluation should additionally consider recall among the top-ranked trades, analyst capacity, explanation usefulness, and expected costs under explicitly stated assumptions.
+
+Accuracy alone is insufficient because failures are rare. A model that predicts every trade will settle can achieve high accuracy while detecting no failures. Financial savings and reductions in actual failures would require a controlled real-world evaluation and are not established by this project.
+
+## 3. Data Understanding
+
+### Dataset and provenance
+
+The project uses `data/trade_settlement_synthetic.csv`, supported by `data/data_dictionary.csv`. The existing project README records the following statistics from saved final-notebook outputs:
+
+| Characteristic | Recorded value |
+|---|---|
+| Observations | 25,000 trades |
+| Columns | 37 |
+| Trade-date coverage | 2023-01-02 through 2025-11-28 |
+| Settlement failure rate | 1.96% |
+| Duplicate trade IDs | 0 |
+| Classification target | `settlement_failed` |
+| Separate regression target | `settlement_delay_hours` |
+
+These values are previously recorded notebook results, not statistics independently recalculated for this documentation. The data dictionary confirms 37 named fields. Synthetic data enables reproducible experimentation without exposing confidential client or transaction information, but its relationships may reflect generation assumptions rather than live market behavior.
+
+### Unit of analysis and prediction timing
+
+Each row represents a synthetic trade. The classifier predicts whether the trade will fail to settle by its expected contractual deadline. The prediction time must be specified before evaluating operational usefulness.
+
+Although the dictionary labels operational fields as pre-prediction, their real-world availability depends on the scoring time. Confirmation, allocation, and affirmation delays, amendment counts, matching attempts, and inventory indicators must represent information observed by that time. A completed processing duration must not be used when that activity would still be pending at scoring.
+
+Historical failure rates and reference averages must use only prior information available at scoring. Their windows must not include the current trade's outcome or future outcomes.
+
+## 4. Attribute Information
+
+The following grouped dictionary covers all 37 original fields. Descriptions follow the project's supplied data dictionary.
+
+| Attribute(s) | Type | Meaning and modeling role |
+|---|---|---|
+| `trade_id` | Identifier | Unique synthetic trade identifier; retain for traceability and exclude as a predictor. |
+| `trade_date`, `settlement_date` | Date | Execution date and expected contractual settlement date; support chronological partitioning and calendar context. |
+| `asset_class` | Categorical | Equity, corporate bond, government bond, or ETF. |
+| `buy_sell` | Categorical | Transaction direction. |
+| `currency`, `market`, `settlement_location` | Categorical | Currency, market geography, and synthetic settlement/depository location. |
+| `counterparty_id`, `custodian` | Categorical | Synthetic counterparty and custodian identifiers; evaluate sensitivity to unfamiliar entities. |
+| `trade_amount`, `quantity` | Numeric | Synthetic trade value and security quantity; check units and currency comparability. |
+| `settlement_days` | Numeric | Expected interval between execution and settlement; verify the generator's day-count convention. |
+| `cross_border` | Binary | Whether the trade crosses market borders. |
+| `month_end`, `quarter_end` | Binary | Calendar indicators based on the trade date. |
+| `market_holiday_mismatch` | Binary | Synthetic cross-market calendar mismatch flag. |
+| `ssi_status` | Categorical | Standing settlement instruction status: `VALID`, `CHANGED`, or `MISSING`. |
+| `confirmation_delay_minutes` | Numeric | Time between trade execution and confirmation, subject to scoring-time availability. |
+| `allocation_delay_minutes`, `affirmation_delay_minutes` | Numeric | Synthetic allocation and affirmation delays. |
+| `matching_attempts`, `trade_amendments` | Numeric/count | Matching attempts and amendments observed before the scoring cutoff. |
+| `hours_until_cutoff` | Numeric | Time remaining until the operational settlement cutoff. |
+| `prior_fail_rate_30d`, `prior_fail_rate_90d` | Numeric/rate | Synthetic historical counterparty failure rates over prior windows. |
+| `prior_trade_count_30d` | Numeric/count | Recent counterparty activity. |
+| `security_liquidity_score` | Numeric | Synthetic liquidity score from 0 to 1. |
+| `market_volatility_index` | Numeric | Synthetic market-volatility level. |
+| `inventory_shortfall_indicator` | Binary | Possible security inventory constraint. |
+| `counterparty_avg_trade_amount` | Numeric | Synthetic rolling/reference counterparty average trade size. |
+| `trade_size_ratio` | Numeric | Current trade amount divided by the synthetic counterparty average. |
+| `pre_settlement_note` | Text | Synthetic pre-settlement note; reserved for NLP experiments by default. |
+| `settlement_failed` | Binary target | `1` = failed; `0` = settled. Never use as a classifier input. |
+| `settlement_delay_hours` | Numeric outcome | Realized settlement delay; separate regression target, excluded from pre-settlement classifier inputs. |
+| `failure_reason` | Categorical outcome | Final failure reason; excluded from predictive inputs and used only for post-event analysis. |
+| `failure_reason_description` | Text outcome | Final failure description; reserved for a separate post-event NLP task. |
+
+**Leakage boundary:** Realized outcomes and final failure descriptions cannot be used to predict the same trade's pre-settlement risk. Identifiers and date fields also require deliberate handling rather than automatic inclusion.
+
+## 5. Data Preparation and Visualization
+
+### Preparation workflow
+
+1. Load the CSV and check column names against the data dictionary.
+2. Parse dates and numeric values; inspect invalid conversions and inconsistent categories.
+3. Assess missingness, duplicate identifiers, target balance, and date coverage.
+4. Separate targets, identifiers, post-outcome fields, and eligible predictors.
+5. Partition trades chronologically into training, validation, and final test periods.
+6. Fit imputation, encoding, scaling, and other learned transformations on training data only.
+7. Apply the fitted transformations to validation and test data without refitting.
+
+### Exploratory visualizations
+
+| Visualization | Learning objective |
+|---|---|
+| Settlement outcome count/proportion chart | Show the rare-event classification challenge. |
+| Failure rate by SSI status | Explore association between instruction status and outcomes. |
+| Failure rate by asset class and market | Identify segments with differing observed rates. |
+| Trade amount histogram with log-scale view | Inspect skew and extreme transaction sizes. |
+| Operational delay distributions by outcome | Compare processing patterns for failed and settled trades. |
+| Numeric correlation heatmap | Inspect related features and potential redundancy. |
+| Trade volume and failure rate over time | Assess temporal variation and evaluation-period differences. |
+| PCA scree plot and cluster profiles | Explore dimensionality and operational segmentation. |
+
+Report group sample sizes alongside failure rates so that small groups do not appear more reliable than they are. Exploratory associations should not be presented as causal findings. The existing README lists saved EDA charts for outcome distribution, asset class, SSI status, market, and confirmation delay; other views above are recommended additions where supported by the notebook.
+
+## 6. Data Cleansing, Processing, and Modeling
+
+### Data cleansing and quality controls
+
+- Investigate duplicate `trade_id` values before removing records; repeated operational snapshots require a different treatment from duplicate rows.
+- Standardize categorical labels and distinguish a meaningful `MISSING` SSI status from an absent value.
+- Validate binary values, score/rate ranges, nonnegative counts, and date consistency against field definitions.
+- Inspect extreme trade values and delays rather than automatically deleting legitimate high-risk observations.
+- Handle missing numeric values with training-derived imputation and categorical values with an explicit strategy appropriate to their meaning.
+- Check denominator validity when calculating ratios and prevent undefined values.
+- Verify that historical aggregates and operational fields respect the prediction timestamp.
+
+These controls describe the intended preparation standard. The raw CSV and execution outputs should be checked before claiming that every control passed or that a specific cleansing operation was necessary.
+
+### Feature processing
+
+Candidate engineered features documented in the existing project include log-transformed trade amounts, transformed processing delays, aggregate delay indicators, operational touch counts, and counterparty risk indicators. Combining processing durations requires checking whether activities overlap; a sum is a constructed indicator rather than automatically an elapsed end-to-end duration.
+
+Categorical encoding and numeric scaling should be model-appropriate. Scaling is especially relevant for Logistic Regression, KNN, SVM, PCA, and K-Means. Tree-based models generally do not require numeric scaling. Any feature selection, dimensionality reduction, imbalance handling, or tuning must remain inside the training/validation workflow.
+
+### Modeling tasks
+
+| Task | Methods documented in the existing project | Purpose |
+|---|---|---|
+| Failure classification | Logistic Regression, KNN, Decision Tree, Random Forest, SVM, XGBoost, CatBoost | Predict `settlement_failed`. |
+| Delay regression | Linear Regression, Ridge, Random Forest regression | Estimate `settlement_delay_hours` as a separate outcome. |
+| Dimensionality reduction | PCA/SVD | Explore compact representations and feature variation. |
+| Segmentation | K-Means | Describe groups with similar operational characteristics. |
+| Anomaly detection | Isolation Forest | Identify unusual trades for investigation; anomaly scores are not failure probabilities. |
+| Post-event text classification | TF-IDF-based NLP | Classify final failure descriptions after the event. |
+| Explainability | SHAP | Inspect global feature influence and local prediction contributions. |
+| Risk narratives | Grounded rules/templates | Translate available scores and risk drivers into readable analyst summaries. |
+
+### Evaluation and model selection
+
+Use chronological validation, and time-aware cross-validation where supported, to avoid learning from future observations. Tune hyperparameters and alert thresholds on training/validation data; reserve the final test period for the final assessment. When training examples have outcomes that mature after a split boundary, account for that label-availability delay.
+
+Classification evaluation should include precision, recall, F1, ROC-AUC, PR-AUC, confusion matrices, and threshold sensitivity. State the PR-AUC calculation used so comparisons remain consistent. Evaluate regression using MAE and RMSE, with other measures where appropriate. Probability calibration should be assessed before interpreting scores as reliable failure probabilities; the existing README identifies calibration as a next step rather than a verified completed capability.
+
+The saved results in the existing README show Logistic Regression with the highest recorded PR-AUC and recall among the compared classifiers, while CatBoost has the highest recorded precision and F1 at the reported operating points. Several classifiers record zero recall at their evaluated thresholds. These observations support evaluating thresholds and review workload rather than selecting by accuracy alone. They are recorded results, not a fresh rerun.
+
+The cost demonstration uses hypothetical values of **$5,000 per missed failure** and **$50 per false-positive investigation**. These are scenario assumptions, not measured institutional costs or proven savings.
+
+### Explainable risk management
+
+An illustrative review queue combines a trade identifier, risk score, review priority, relevant trade context, and leading model-based risk drivers. Priority thresholds should reflect validation results and available investigation capacity. A probability of failure alone does not measure monetary exposure or guarantee an effective intervention.
+
+SHAP explanations can help analysts identify fields to inspect, but they do not prove that changing a feature will prevent failure. Proposed interventions require operational judgment. Monitor data quality, feature drift, alert volume, eventual outcome performance, and segment-level reliability. PSI provides a distribution-shift signal; it does not by itself establish model deterioration.
+
+## 7. Process Summary
+
+| Stage | Key activity | Deliverable or decision |
+|---|---|---|
+| Business understanding | Define failure prediction, scoring time, and review objectives | Clear analytical scope and success criteria. |
+| Data understanding | Inspect synthetic trades, schema, target prevalence, and availability | Data profile and attribute dictionary. |
+| Preparation and EDA | Validate records, explore distributions, and create temporal partitions | Prepared inputs and explanatory visualizations. |
+| Feature processing | Build eligible predictors and fit training-only transformations | Reusable preprocessing workflow. |
+| Modeling | Compare classifiers; analyze delay, clusters, and anomalies separately | Model outputs and comparison tables. |
+| Evaluation | Assess rare-event detection, thresholds, and hypothetical costs | Evidence for model and operating-point selection. |
+| Explainability | Inspect SHAP contributions and generate grounded narratives | Understandable prediction explanations. |
+| Decision support | Rank trades for analyst review | Illustrative operations risk queue. |
+| Monitoring | Track distribution shifts and eventual performance | Monitoring outputs and proposed review triggers. |
+
+The capstone demonstrates how prediction, explanation, and operational prioritization can be connected in a reproducible research workflow. Production adoption would require validation on authorized real-world data, verified point-in-time feature availability, calibrated scores, approved review thresholds, and monitored operational outcomes.
+
+**Documentation basis:** These sections were aligned with the supplied project README and `data_dictionary.csv`. Dataset statistics, model coverage, and comparative results reflect that README's recorded evidence. Recommended controls and additional analyses are distinguished from verified execution; the dataset, scripts, and notebook were not independently rerun for this documentation update.
+
 
 ## Data sources and scope
 
