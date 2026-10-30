@@ -23,10 +23,7 @@ The numbered, color-coded architecture below illustrates the project's data inge
 
 **Scope:** This is a research architecture using synthetic data, not a deployed trading system. Analyst review is a proposed workflow; narrative explanations are template-based rather than an external LLM service. The numbers identify components and branches, not a strict execution sequence.
 
-# AI-Powered Intelligent Trade Settlement Failure Prediction and Explainable Risk Management System
-
-**UC Berkeley Professional Certificate in Machine Learning & Artificial Intelligence — Final Capstone Project**  
-**Author:** Rama Nuti
+-------------------------------------------------------------------------------------------
 
 ## 1. What Is the Trade Settlement Failure Prediction and Explainable Risk Management System?
 
