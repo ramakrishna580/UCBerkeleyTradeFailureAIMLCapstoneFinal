@@ -5,6 +5,8 @@
 **Author:** Rama Nuti  
 **GitHub:** [ramakrishna580](https://github.com/ramakrishna580/)
 
+![UC_Berkeley_Trade_Settlement_Capstone_FinalReport](docs/UC_Berkeley_Trade_Settlement_Capstone_FinalReport.pdf)
+
 ## Executive summary
 
 This capstone investigates whether pre-settlement trade and operational signals can identify securities transactions at elevated risk of settlement failure, enabling operations teams to prioritize preventive action. It combines supervised failure classification, settlement-delay regression, exploratory and statistical analysis, unsupervised segmentation, anomaly detection, explainability, and an operations-oriented risk queue. The analysis uses **synthetic trade settlement data**, so results are educational demonstrations rather than validated production performance.
