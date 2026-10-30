@@ -5,7 +5,7 @@
 **Author:** Rama Nuti  
 **GitHub:** [ramakrishna580](https://github.com/ramakrishna580/)
 
-![UC_Berkeley_Trade_Settlement_Capstone_FinalReport](docs/UC_Berkeley_Trade_Settlement_Capstone_FinalReport.pdf)
+· **(docs/UC_Berkeley_Trade_Settlement_Capstone_FinalReport.pdf)
 
 ## Executive summary
 
